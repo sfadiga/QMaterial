@@ -8,4 +8,4 @@ A another approach to:
 https://github.com/laserpants/qt-material-widgets
 
 
-stay tunned...
+stay tuned ;)
