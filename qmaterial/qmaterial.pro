@@ -4,10 +4,13 @@
 #
 #-------------------------------------------------
 
-QT       += widgets svg
+QT       += core gui svg
 
-TARGET = QMaterialLib
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+
 TEMPLATE = lib
+CONFIG += staticlib
 
 DEFINES += QMATERIALLIB_LIBRARY
 
@@ -25,7 +28,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         qmaterialbutton.cpp \
         qmaterialcolorpalette.cpp \
-        qmateriallib.cpp \
+        qmaterialcornershape.cpp \
+        qmaterialedgeshape.cpp \
         qmaterialoverlay.cpp \
         qmaterialshape.cpp \
         qmaterialstate.cpp \
@@ -34,16 +38,11 @@ SOURCES += \
 HEADERS += \
         qmaterialbutton.h \
         qmaterialcolorpalette.h \
-        qmateriallib.h \
-        qmateriallib_global.h  \
+        qmaterialcornershape.h \
+        qmaterialedgeshape.h \
         qmaterialoverlay.h \
         qmaterialshape.h \
         qmaterialstate.h \
         qmaterialtheme.h
 
 
-
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}

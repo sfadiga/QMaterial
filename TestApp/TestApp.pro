@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = TestApp
+TARGET = testapp
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -34,7 +34,12 @@ HEADERS += \
 FORMS += \
         mainwindow.ui
 
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+
+#INCLUDEPATH ''= $$top_srcdir/qmaterial/
+INCLUDEPATH += $$top_srcdir/qmaterial/
+
+#LIBS''= -L$$top_builddir/qmaterial/$(OBJECTS_DIR)/libqmaterial.a
+LIBS += $$top_builddir/qmaterial/$(OBJECTS_DIR)/libqmaterial.a
+
+TARGET = testapp-exe
+PRE_TARGETDEPS += $$top_builddir/qmaterial/$(OBJECTS_DIR)/libqmaterial.a

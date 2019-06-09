@@ -280,7 +280,7 @@ public:
     QMaterialColorPalette();
 
 
-    QColor getColor(MaterialColor colorName);
+    QColor getColor(MaterialColor color);
 
 
 private:

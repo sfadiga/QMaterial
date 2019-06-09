@@ -5,7 +5,7 @@ QMaterialColorPalette::QMaterialColorPalette()
 
 }
 
-QColor QMaterialColorPalette::getColor(QMaterialColorPalette::MaterialColor colorName)
+QColor QMaterialColorPalette::getColor(QMaterialColorPalette::MaterialColor color)
 {
     static const QColor palette[] = {
         QColor("#ffebee"), QColor("#ffcdd2"), QColor("#ef9a9a"), QColor("#e57373"),
@@ -83,6 +83,6 @@ QColor QMaterialColorPalette::getColor(QMaterialColorPalette::MaterialColor colo
         QColor(255, 255, 255, 138)
     };
 
-    return palette[colorName];
+    return palette[color];
 }
 

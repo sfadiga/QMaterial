@@ -4,12 +4,59 @@
 #include <QColor>
 #include <QFont>
 
+//!
+//! \brief The QMaterialTheme class
+//!
 class QMaterialTheme
 {
 public:
-    QMaterialTheme();
+    enum IconFamily
+    {
+        Filled, Outlined
+    };
+
+public:
+    QMaterialTheme() = default;
+    ~QMaterialTheme() = default;
+
+    QColor color_primary() const;
+    void setColor_primary(const QColor &color_primary);
+
+    QColor color_secondary() const;
+    void setColor_secondary(const QColor &color_secondary);
+
+    QColor color_surface() const;
+    void setColor_surface(const QColor &color_surface);
+
+    QColor color_background() const;
+    void setColor_background(const QColor &color_background);
+
+    QColor color_error() const;
+    void setColor_error(const QColor &color_error);
+
+    short shape_small_radius() const;
+    void setShape_small_radius(short shape_small_radius);
+
+    short shape_medium_radius() const;
+    void setShape_medium_radius(short shape_medium_radius);
+
+    short shape_large_radius() const;
+    void setShape_large_radius(short shape_large_radius);
+
+    QFont typography() const;
+    void setTypography(const QFont &typography);
+
+    IconFamily icon() const;
+    void setIcon(const IconFamily &icon);
+
+    //!
+    //! \brief default_theme
+    //! \return
+    //!
+    static QMaterialTheme default_theme();
 
 private:
+
     /* Color */
     // To change your theme's color scheme, replace the existing HEX color values with custom HEX color values. Use our color palette generator to help come up with pairings and check your color contrast. https://material.io/design/color/the-color-system.html#tools-for-picking-colors
     // Primary colors ($mdc-theme-primary) map to components such as app bars and buttons, while secondary colors ($mdc-theme-secondary) are used as accents on components such as FABs and selection controls.
@@ -36,6 +83,9 @@ private:
     /*  Typography */
     // To change your theme's typography, we recommend importing a font from Google Fonts and setting the global font-family https://fonts.google.com
     QFont m_typography;
+
+    /* Icon family */
+    IconFamily m_icon;
 
 };
 

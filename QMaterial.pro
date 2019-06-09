@@ -1,5 +1,6 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    QMaterialLib \
-    TestApp
+    qmaterial \
+    testapp
+CONFIG += ordered
