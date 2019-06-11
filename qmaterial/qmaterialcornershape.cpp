@@ -1,16 +1,15 @@
 #include "qmaterialcornershape.h"
 
+#include <QtMath>
 
 QMaterialCornerShape::QMaterialCornerShape(ShapeCornerType type)
-    : QMaterialCornerShape(type, type, type, type)
+    : m_corners(QVector<ShapeCornerType>(1, type))
 {}
 
-QMaterialCornerShape::QMaterialCornerShape(ShapeCornerType c1,
-                                           ShapeCornerType c2,
-                                           ShapeCornerType c3,
-                                           ShapeCornerType c4) :
-    m_c1(c1), m_c2(c2), m_c3(c3), m_c4(c4)
+QMaterialCornerShape::QMaterialCornerShape(const QVector<QMaterialCornerShape::ShapeCornerType> &types)
+    : m_corners(types)
 {}
+
 
 void QMaterialCornerShape::draw(QPainterPath &path, const QRect &rect, int size_dp)
 {
@@ -20,30 +19,46 @@ void QMaterialCornerShape::draw(QPainterPath &path, const QRect &rect, int size_
     ///      |       |
     /// p8,p7\-------/p5,p6
 
-
-    // TODO testing other solutions
-    QPolygonF polygon = path.toFillPolygon();
-    QList<QLineF> edgeList;
-    for (int i=0 ; i < polygon.count() ; i++)
-    {
-         QLineF edge;
-         if(i != (polygon.count() - 1))
-         {
-             edge.setPoints(polygon.at(i),polygon.at(i + 1));
-         }
-         else
-         {
-             edge.setPoints(polygon.at(i),polygon.at(0));
-         }
-         edgeList << edge;
-     }
-
+    QPointF p0;
+    QPainterPath m_path;
     // TODO testing other solutions
     for(int i = 0; i < path.elementCount(); i++)
     {
-        QPointF pt = path.elementAt(i); //get the value of the point at index i
-        //path.setElementPositionAt(i, 3, 1416); //change the value of the point at index i
+        QPointF p1 = path.elementAt(i); //get the value of the point at index i
+        QPointF p2 = path.elementAt((i+1) % path.elementCount());
+
+        // Variable fRat holds the ratio between the radius and the i-th line segment length.
+        // There is also a check that prevents fRat from having a value over 0.5.
+        // If fRat had a value over 0.5, then the two consecutive rounded corners would overlap,
+        // which would cause a poor visual result.
+        qreal ratio = static_cast<qreal>(size_dp) / sqrt(QPointF::dotProduct(p1, p2)); // GetDistance(p1, p2);
+        if (ratio > 0.5)
+            ratio = 0.5;
+
+        QPointF pt1((1.0 - ratio) * p1.x() + ratio * p2.x(), (1.0 - ratio) * p1.y() + ratio * p2.y());
+
+        if (i == 0)
+        {
+            m_path.moveTo(pt1);
+            p0 = pt1;
+        }
+        else
+        {
+            m_path.quadTo(p1, pt1);
+        }
+
+        QPointF pt2(ratio * p1.x() + (1.0 - ratio) * p2.x(), ratio*p1.y() + (1.0 - ratio) * p2.y());
+
+        m_path.lineTo(pt2);
     }
+
+    // close the last corner
+    m_path.quadTo(path.elementAt(0), p0);
+
+    path = m_path;
+
+
+/*
 
     QPoint tl = rect.topLeft();
     QPoint p1(tl);
@@ -55,7 +70,6 @@ void QMaterialCornerShape::draw(QPainterPath &path, const QRect &rect, int size_
     {
         path.lineTo(p1);
         path.lineTo(p2);
-
     }
     else if (QMaterialCornerShape::Round == m_c1)
     {
@@ -142,5 +156,5 @@ void QMaterialCornerShape::draw(QPainterPath &path, const QRect &rect, int size_
     }
 
     path.lineTo(p1);
-
+*/
 }

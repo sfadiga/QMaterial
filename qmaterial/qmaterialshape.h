@@ -12,7 +12,7 @@ class QMaterialShape
 public:
 
     virtual void draw(QPainterPath &path, const QRect &rect, int size_dp) = 0;
-    virtual ~QMaterialShape();
+    virtual ~QMaterialShape() = default;
 
 };
 
