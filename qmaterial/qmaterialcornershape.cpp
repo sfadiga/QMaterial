@@ -11,6 +11,19 @@ QMaterialCornerShape::QMaterialCornerShape(const QVector<QMaterialCornerShape::S
 {}
 
 
+QMaterialCornerShape::ShapeCornerType QMaterialCornerShape::cornerTypeIndex(int i)
+{
+    if(i > m_corners.size() - 1)
+    {
+        return m_corners.at(0);
+    }
+    else
+    {
+        return m_corners.at(i);
+    }
+
+}
+
 void QMaterialCornerShape::draw(QPainterPath &path, const QRect &rect, int size_dp)
 {
     ///
@@ -22,16 +35,21 @@ void QMaterialCornerShape::draw(QPainterPath &path, const QRect &rect, int size_
     QPointF p0;
     QPainterPath m_path;
     // TODO testing other solutions
-    for(int i = 0; i < path.elementCount(); i++)
+    const int count = path.elementCount() - 1;
+    for(int i = 0 ; i < count ; i++)
     {
+        ShapeCornerType corner_type =  cornerTypeIndex(i);
         QPointF p1 = path.elementAt(i); //get the value of the point at index i
-        QPointF p2 = path.elementAt((i+1) % path.elementCount());
+        QPointF p2 = path.elementAt((i + 1) % count);
 
         // Variable fRat holds the ratio between the radius and the i-th line segment length.
         // There is also a check that prevents fRat from having a value over 0.5.
         // If fRat had a value over 0.5, then the two consecutive rounded corners would overlap,
         // which would cause a poor visual result.
-        qreal ratio = static_cast<qreal>(size_dp) / sqrt(QPointF::dotProduct(p1, p2)); // GetDistance(p1, p2);
+        //qreal sqrt_d = QPointF::dotProduct(p1, p2);
+        qreal sqrt_d = (p1.x() - p2.x())*(p1.x() - p2.x()) + (p1.y() - p2.y()) * (p1.y() - p2.y());
+        qreal d = sqrt(sqrt_d);
+        qreal ratio = static_cast<qreal>(size_dp) / d; // GetDistance(p1, p2);
         if (ratio > 0.5)
             ratio = 0.5;
 
@@ -40,20 +58,32 @@ void QMaterialCornerShape::draw(QPainterPath &path, const QRect &rect, int size_
         if (i == 0)
         {
             m_path.moveTo(pt1);
-            p0 = pt1;
+            p0.rx() = pt1.x();
+            p0.ry() = pt1.y();
         }
-        else
+        else if (Round == corner_type)
         {
-            m_path.quadTo(p1, pt1);
+            m_path.quadTo(path.elementAt(i), pt1);
+        }
+        else if(Cut == corner_type)
+        {
+            m_path.lineTo(pt1);
+            m_path.lineTo(path.elementAt(i));
         }
 
-        QPointF pt2(ratio * p1.x() + (1.0 - ratio) * p2.x(), ratio*p1.y() + (1.0 - ratio) * p2.y());
+        QPointF pt2(ratio * p1.x() + (1.0 - ratio) * p2.x(), ratio * p1.y() + (1.0 - ratio) * p2.y());
 
         m_path.lineTo(pt2);
     }
 
-    // close the last corner
-    m_path.quadTo(path.elementAt(0), p0);
+    if (Round == cornerTypeIndex(0))
+        // close the last corner
+        m_path.quadTo(path.elementAt(0), p0);
+    else
+    {
+        m_path.lineTo(p0);
+         m_path.lineTo(path.elementAt(0));
+    }
 
     path = m_path;
 

@@ -108,7 +108,7 @@ QMaterialTheme QMaterialTheme::default_theme()
     theme.m_color_on_primary = QColor("#442b2d");
     theme.m_color_on_secondary = QColor("#442b2d");
 
-    theme.m_shape_small_radius = 10;
+    theme.m_shape_small_radius = 3;
 
     return theme;
 }

@@ -51,6 +51,7 @@ protected:
 private:
     QVector<ShapeCornerType> m_corners;
 
+    ShapeCornerType cornerTypeIndex(int i);
 };
 
 #endif // QMATERIALCORNERSHAPE_H

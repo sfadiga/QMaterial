@@ -13,8 +13,8 @@ QMaterialButton::QMaterialButton(const QString &text, QWidget *parent, QMaterial
       m_edge_shape(new QMaterialArrowShape(QMaterialArrowShape::None,
                                       QMaterialArrowShape::Out,
                                       QMaterialArrowShape::None,
-                                      QMaterialArrowShape::None)),
-      m_corner_shape(new QMaterialCornerShape(QMaterialCornerShape::Round))
+                                      QMaterialArrowShape::None))
+
 {
 
 }
@@ -92,9 +92,17 @@ void QMaterialButton::paintEvent(QPaintEvent *event)
     const short cr = m_theme.shape_small_radius();
 
     QPainterPath path;
-    m_edge_shape->draw(path, this->rect(), cr);
+    m_edge_shape->draw(path, this->rect(), 10);
 
-    m_corner_shape->draw(path, this->rect(), cr);
+
+    QVector<QMaterialCornerShape::ShapeCornerType> vec;
+    vec.append(QMaterialCornerShape::Round);
+    vec.append(QMaterialCornerShape::Cut);
+    vec.append(QMaterialCornerShape::Cut);
+    vec.append(QMaterialCornerShape::Cut);
+    vec.append(QMaterialCornerShape::Round);
+    QMaterialCornerShape* corner_shape = new QMaterialCornerShape(vec);
+    corner_shape->draw(path, this->rect(), 5);
 
     painter.setClipPath(path);
     painter.setClipping(true);
